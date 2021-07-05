@@ -1,0 +1,26 @@
+# Logs
+*.log
+npm-debug.log
+
+# Dependency directory
+node_modules
+
+# Runtime data
+tmp
+
+
+android/build
+build/
+.idea
+.gradle
+local.properties
+*.iml
+
+
+/.github
+/examples
+circle.yml
+commitlint.config.js
+/android/build
+/website
+/docs

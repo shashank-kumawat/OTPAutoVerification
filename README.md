@@ -1,1 +1,1 @@
-# OTPAutoVerification
+# react-native-OTPAutoverification
