@@ -1,0 +1,44 @@
+{
+  "name": "react-native-otp-autoverification",
+  "version": "0.1.0",
+  "description": "React Native OTP Auto Verification Component",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shashank-kumawat/OTPAutoVerification.git"
+  },
+  "keywords": [
+    "otp",
+    "SMS",
+    "Auto Verification",
+    "react-native",
+    "react-component",
+    "Otp fields",
+    "Verification",
+    "react-native",
+    "react-component",
+    "react-native-component",
+    "react",
+    "react native",
+    "mobile",
+    "ios",
+    "android"
+  ],
+  "author": "Shashank Kumawat",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shashank-kumawat/OTPAutoVerification/issues"
+  },
+  "homepage": "https://github.com/shashank-kumawat/OTPAutoVerification#readme",
+  "peerDependencies": {
+    "react-native": "^0.59.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.6",
+    "babel-preset-expo": "~8.1.0",
+    "metro-react-native-babel-preset": "^0.59.0"
+  }
+}
