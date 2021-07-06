@@ -1,6 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {
   Platform,
   Text,
@@ -41,7 +42,11 @@ class OTPAutoVerification extends Component {
   constructor(props) {
     super(props);
     this.otpTextInput = [];
-    this.state = {code: Array.apply(null, Array(6)).map(function () {})};
+    this.state = {
+      code: Array.apply(null, Array(this.props.numberOfInputs)).map(
+        function () {},
+      ),
+    };
   }
 
   componentDidMount() {
@@ -98,17 +103,30 @@ class OTPAutoVerification extends Component {
   }
 
   renderCodeInput(styles) {
-    const inputs = Array.apply(null, Array(6)).map(function () {});
+    const {
+      numberOfInputs,
+      selectionColor,
+      secureTextEntry,
+      keyboardAppearance,
+      keyboardType,
+      placeholder,
+      placeholderTextColor,
+    } = this.props;
+    const inputs = Array.apply(null, Array(numberOfInputs)).map(function () {});
     const textInput = inputs.map((i, index) => (
       <View key={index}>
         <TextInput
           autoCapitalize="characters"
-          returnKeyType={'done'}
           autoCorrect={false}
           allowFontScaling={false}
-          style={styles.codeInput}
+          secureTextEntry={secureTextEntry}
+          keyboardAppearance={keyboardAppearance}
+          keyboardType={keyboardType}
+          placeholder={placeholder}
+          placeholderTextColor={placeholderTextColor}
+          selectionColor={selectionColor}
+          style={[styles.codeInput, this.props.inputStyles]}
           maxLength={1}
-          keyboardType="default"
           onChangeText={value => this.focusNext(index, value)}
           onKeyPress={e => {
             this.setState({keyPress: e.nativeEvent.key});
@@ -122,18 +140,12 @@ class OTPAutoVerification extends Component {
           value={this.state.code[index]}
           textContentType={isAutoFillSupported ? 'oneTimeCode' : 'none'}
           selectTextOnFocus={true}
-          selectionColor={'grey'}
         />
       </View>
     ));
 
     return (
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginTop: 34,
-        }}>
+      <View style={[styles.textInputContainer, this.props.textInputContainer]}>
         {textInput}
       </View>
     );
@@ -150,6 +162,14 @@ class OTPAutoVerification extends Component {
     ) {
       this.otpTextInput[currentIndex - 1].focus();
     }
+    if (this.state.keyPress === 'Backspace' && currentIndex !== 0) {
+      if (
+        currentIndex !== 0 ||
+        (currentIndex <= this.otpTextInput.length - 1 && !!currentIndexValue)
+      ) {
+        this.otpTextInput[currentIndex - 1].focus();
+      }
+    }
   }
 
   focusNext(index, value) {
@@ -158,15 +178,6 @@ class OTPAutoVerification extends Component {
     }
     if (index === this.otpTextInput.length - 1) {
       this.otpTextInput[index].blur();
-    }
-    if (this.state.keyPress === 'Backspace' && index !== 0) {
-      let currentIndexValue = this.state.code[index] === '';
-      if (
-        index !== 0 ||
-        (index <= this.otpTextInput.length - 1 && !!currentIndexValue)
-      ) {
-        this.otpTextInput[index - 1].focus();
-      }
     }
     let {code} = this.state;
     code[index] = value;
@@ -177,7 +188,7 @@ class OTPAutoVerification extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.conatinerStyles]}>
         {this.renderCodeInput(styles)}
       </View>
     );
@@ -189,8 +200,8 @@ export default OTPAutoVerification;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginHorizontal: 15,
-    marginTop: 100,
+    backgroundColor: 'rgb(255,250,250)',
+    justifyContent: 'center',
   },
   codeInput: {
     width: 40,
@@ -200,7 +211,32 @@ const styles = StyleSheet.create({
     fontSize: 20,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'rgb(67, 71, 88)',
+    borderColor: 'grey',
     backgroundColor: 'rgba(255, 255, 255, 0.32)',
   },
+  textInputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: 15,
+  },
 });
+
+OTPAutoVerification.propTypes = {
+  numberOfInputs: PropTypes.number.isRequired,
+  selectionColor: PropTypes.string,
+  secureTextEntry: PropTypes.bool,
+  keyboardAppearance: PropTypes.string,
+  keyboardType: PropTypes.string,
+  placeholder: PropTypes.string,
+  placeholderTextColor: PropTypes.string,
+};
+
+OTPAutoVerification.defaultProps = {
+  numberOfInputs: 4,
+  selectionColor: 'grey',
+  secureTextEntry: false,
+  keyboardAppearance: 'default',
+  keyboardType: 'number-pad',
+  placeholder: '',
+  placeholderTextColor: 'grey',
+};
