@@ -5,16 +5,16 @@
 
 ## Installation Process
 
-`npm install --save react-native-OTPAutoverification`
+`npm install --save react-native-otp-autoverification`
 or
-`yarn add react-native-OTPAutoverification`
+`yarn add react-native-otp-autoverification`
 
 ## Dependencies
 No such Dependencies. 
 ## Basic Usage
 
 ```js
-import {OTPAutoVerification} from 'react-native-OTPAutoverification'
+import {OTPAutoVerification} from 'react-native-otp-autoverification'
 
 ...
 
@@ -25,7 +25,7 @@ import {OTPAutoVerification} from 'react-native-OTPAutoverification'
 ## More Advanced Usage
 
 ```js
-import {OTPAutoVerification} from 'react-native-OTPAutoverification'
+import {OTPAutoVerification} from 'react-native-otp-autoverification'
 
 ...
 
