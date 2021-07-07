@@ -17,6 +17,8 @@ build/
 local.properties
 *.iml
 
+.DS_Store
+
 # BUCK
 buck-out/
 \.buckd/
