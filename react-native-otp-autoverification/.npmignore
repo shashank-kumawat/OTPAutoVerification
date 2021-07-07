@@ -1,26 +1,33 @@
-# Logs
-*.log
-npm-debug.log
-
-# Dependency directory
-node_modules
-
-# Runtime data
-tmp
-
-
-android/build
-build/
 .idea
-.gradle
-local.properties
+Screenshots
+.gif
 *.iml
+# OSX
+#
 .DS_Store
+# Xcode
+#
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
 
-/.github
-/examples
-circle.yml
-commitlint.config.js
-/android/build
-/website
-/docs
+# node.js
+#
+node_modules/
+npm-debug.log
+examples/
+screenshot/
+*.md
