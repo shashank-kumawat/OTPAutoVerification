@@ -2,38 +2,9 @@
 
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {
-  Platform,
-  Text,
-  View,
-  TextInput,
-  NativeModules,
-  DeviceEventEmitter,
-  StyleSheet,
-} from 'react-native';
-const RNOtpVerify = NativeModules.RNOtpVerify;
+import {Platform, View, TextInput, StyleSheet} from 'react-native';
 
-let OtpVerify = {
-  getOtp:
-    RNOtpVerify === null || RNOtpVerify === void 0
-      ? void 0
-      : RNOtpVerify.getOtp,
-  getHash:
-    RNOtpVerify === null || RNOtpVerify === void 0
-      ? void 0
-      : RNOtpVerify.getHash,
-  addListener: function (handler) {
-    return DeviceEventEmitter.addListener(
-      'com.otpautoverification:otpReceived',
-      handler,
-    );
-  },
-  removeListener: function () {
-    return DeviceEventEmitter.removeAllListeners(
-      'com.otpautoverification:otpReceived',
-    );
-  },
-};
+import OtpEvents from './OtpEvents';
 
 const majorVersionIOS = parseInt(String(Platform.Version), 10);
 const isAutoFillSupported = Platform.OS === 'ios' && majorVersionIOS >= 12;
@@ -52,54 +23,37 @@ class OTPAutoVerification extends Component {
   componentDidMount() {
     this.otpTextInput[0].focus();
     if (Platform.OS === 'android') {
-      this.getHash();
-      OtpVerify.removeListener();
-      this.startListeningForOtp();
-      this.timer = setInterval(this.startListeningForOtp, 1000);
+      OtpEvents.getHashCode();
+      OtpEvents.removeListener();
+      OtpEvents.startListeningForOtp(this.otpHandler);
+      this.timer = setInterval(OtpEvents.startListeningForOtp, 1000);
     }
   }
 
-  getHash = () => OtpVerify.getHash().then(console.log).catch(console.log);
-
-  startListeningForOtp() {
-    OtpVerify.getOtp()
-      .then(p => {
-        OtpVerify.addListener(message => {
-          try {
-            if (message && message !== 'Timeout Error') {
-              const otp = /(\d{6})/g.exec(message)[1];
-              if (otp.length === 6) {
-                this.setState({code: [...otp]});
-                this.props.isFormValid();
-                this.otpTextInput[0].blur();
-              }
-            } else {
-              console.log(
-                'OTPVerification: OTPAutoVerification.getOtp - message=>',
-                message,
-              );
-            }
-          } catch (error) {
-            console.log(
-              'OTPVerification: OTPAutoVerification.getOtp error=>',
-              error,
-            );
-          }
-        });
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    return () => {
-      OtpVerify.removeListener();
-    };
-  }
+  otpHandler = message => {
+    try {
+      if (message && message !== 'Timeout Error') {
+        const otp = /(\d{6})/g.exec(message)[1];
+        if (otp.length === 6) {
+          this.setState({code: [...otp]});
+          this.otpTextInput[0].blur();
+        }
+      } else {
+        console.log(
+          'OTPVerification: OTPAutoVerification.getOtp - message=>',
+          message,
+        );
+      }
+    } catch (error) {
+      console.log('OTPVerification: OTPAutoVerification.getOtp error=>', error);
+    }
+  };
 
   componentWillUnmount() {
     if (this.timer) {
       clearInterval(this.timer);
     }
-    OtpVerify.removeListener();
+    OtpEvents.removeListener();
   }
 
   renderCodeInput(styles) {
@@ -232,7 +186,7 @@ OTPAutoVerification.propTypes = {
 };
 
 OTPAutoVerification.defaultProps = {
-  numberOfInputs: 4,
+  numberOfInputs: 6,
   selectionColor: 'grey',
   secureTextEntry: false,
   keyboardAppearance: 'default',

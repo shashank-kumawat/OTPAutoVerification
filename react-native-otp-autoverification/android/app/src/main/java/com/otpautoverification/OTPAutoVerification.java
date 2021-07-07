@@ -37,7 +37,7 @@ public class OTPAutoVerification extends ReactContextBaseJavaModule implements L
 
     @Override
     public String getName() {
-        return "RNOtpVerify";
+        return "RNOtp";
     }
 
     @ReactMethod
