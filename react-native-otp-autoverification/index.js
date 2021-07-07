@@ -1,4 +1,6 @@
+'use strict';
+
 import OTPAutoVerification from './src/OTPAutoVerification';
 import OtpEvents from './src/OtpEvents';
 
-export { OTPAutoVerification, OtpEvents };
+module.exports = { OTPAutoVerification, OtpEvents };
