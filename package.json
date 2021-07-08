@@ -1,6 +1,6 @@
 {
   "name": "react-native-otp-autoverification",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "React Native OTP Auto Verification Component",
   "main": "index.js",
   "scripts": {
