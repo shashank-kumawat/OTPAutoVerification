@@ -9,22 +9,62 @@
 or
 `yarn add react-native-otp-autoverification`
 
-## Dependencies
-No such Dependencies. 
 ## Basic Usage
 
-```js
-import {OTPAutoVerification} from 'react-native-otp-autoverification'
+## Android
 
-...
+#### Option: Manually
 
-<OTPAutoVerification numberOfInputs={6} />
+- Edit `android/settings.gradle` to look like this:
 
+``` java
+     include ':react-native-otp-autoverification'
+     project(':react-native-otp-autoverification').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-otp-autoverification/android')
+  ```
+ 
+ - Edit `android/app/build.gradle` (note: **app** folder) to look like this:
+
+  ``` java
+  dependencies {
+
+       implementation project(':react-native-otp-autoverification')
+}
 ```
 
+- Edit your `MainApplication.java` (deep in `android/app/src/main/java/...`) to look like this (note **two** places to edit):
+
+ ``` java
+ import com.otpautoverification.OTPAutoVerificationPackage;
+
+    public class MainApplication extends Application implements ReactApplication {
+
+    // …
+  
+  @Override
+  protected List<ReactPackage> getPackages() {
+    @SuppressWarnings("UnnecessaryLocalVariable")
+    List<ReactPackage> packages = new PackageList(this).getPackages();
+    // …
+    packages.add(new OTPAutoVerificationPackage());
+    return packages;
+  }
+
+    // …
+    }  
+  ```
+
+## JS
+
+ ``` javascript
+ import {OTPAutoVerification} from 'react-native-otp-autoverification'
+   ...
+
+  <OTPAutoVerification numberOfInputs={6} /> 
+  ```
+  
 ## More Advanced Usage
 
-```js
+``` javascript
 import {OTPAutoVerification} from 'react-native-otp-autoverification'
 
 ...
@@ -35,8 +75,9 @@ import {OTPAutoVerification} from 'react-native-otp-autoverification'
     secureTextEntry
     selectionColor = {'grey'}
 />
-
 ```
+## Dependencies
+No such Dependencies. 
 ## Parameters
 
 | Parameter               | required | Description                                                                                     |
