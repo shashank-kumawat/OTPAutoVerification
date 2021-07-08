@@ -41,3 +41,6 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 .idea
+android/src/.DS_Store
+android/src/main/java/.DS_Store
+android/src/main/java/com/.DS_Store
