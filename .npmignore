@@ -23,7 +23,7 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-
+**/.DS_Store
 # node.js
 #
 node_modules/

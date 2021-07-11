@@ -26,13 +26,14 @@ public class OTPAutoVerification extends ReactContextBaseJavaModule implements L
     private final ReactApplicationContext reactContext;
     private BroadcastReceiver mReceiver;
     private boolean isReceiverRegistered = false;
-
+    private SmsRetrieverClient client;
     public OTPAutoVerification(ReactApplicationContext reactContext) {
         super(reactContext);
         this.reactContext = reactContext;
         mReceiver = new OtpBroadcastReceiver(reactContext);
         getReactApplicationContext().addLifecycleEventListener(this);
         registerReceiverIfNecessary(mReceiver);
+        client = SmsRetriever.getClient(reactContext);
     }
 
     @Override
@@ -45,23 +46,24 @@ public class OTPAutoVerification extends ReactContextBaseJavaModule implements L
         requestOtp(promise);
     }
 
-    @ReactMethod
-    public void getHash(Promise promise) {
-        try {
-            AppSignatureHelper helper = new AppSignatureHelper(reactContext);
-            ArrayList<String> signatures = helper.getAppSignatures();
-            WritableArray arr = Arguments.createArray();
-            for (String s : signatures) {
-                arr.pushString(s);
-            }
-            promise.resolve(arr);
-        } catch (Exception e) {
-            promise.reject(e);
-        }
-    }
+   @ReactMethod
+   public void getHash(Promise promise) {
+       try {
+           AppSignatureHelper helper = new AppSignatureHelper(reactContext);
+           ArrayList<String> signatures = helper.getAppSignatures();
+           WritableArray arr = Arguments.createArray();
+           for (String s : signatures) {
+               arr.pushString(s);
+           }
+           promise.resolve(arr);
+       } catch (Exception e) {
+           promise.reject(e);
+       }
+   }
 
 
     private void registerReceiverIfNecessary(BroadcastReceiver receiver) {
+        unregisterReceiver(mReceiver);
         if (getCurrentActivity() == null) return;
         try {
             getCurrentActivity().registerReceiver(
@@ -76,8 +78,8 @@ public class OTPAutoVerification extends ReactContextBaseJavaModule implements L
     }
 
     private void requestOtp(final Promise promise) {
-        SmsRetrieverClient client = SmsRetriever.getClient(reactContext);
-        
+    if (client != null){
+        registerReceiverIfNecessary(mReceiver);
         Task<Void> task = client.startSmsRetriever();
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -95,6 +97,7 @@ public class OTPAutoVerification extends ReactContextBaseJavaModule implements L
             }
         });
     }
+    }
 
     private void unregisterReceiver(BroadcastReceiver receiver) {
         if (isReceiverRegistered && getCurrentActivity() != null && receiver != null) {
@@ -110,12 +113,11 @@ public class OTPAutoVerification extends ReactContextBaseJavaModule implements L
 
     @Override
     public void onHostResume() {
-        registerReceiverIfNecessary(mReceiver);
     }
 
     @Override
     public void onHostPause() {
-        unregisterReceiver(mReceiver);
+
     }
 
     @Override
