@@ -14,7 +14,7 @@ class OTPAutoVerification extends Component {
 		super(props);
 		this.otpTextInput = [];
 		this.state = {
-			code: Array.apply(null, Array(this.props.numberOfInputs)).map(function () {}),
+			code: this.props.code,
 		};
 	}
 
@@ -69,8 +69,11 @@ class OTPAutoVerification extends Component {
 					placeholderTextColor={placeholderTextColor}
 					selectionColor={selectionColor}
 					style={[styles.codeInput, this.props.inputStyles]}
-					maxLength={1}
-					onChangeText={(value) => this.focusNext(index, value)}
+					maxLength={6}
+					onChangeText={(value) => {
+				 this.focusNext(index,value)
+					Platform.OS === 'ios' ? this.funcs(index,value):''
+					}}
 					onKeyPress={(e) => {
 						this.setState({ keyPress: e.nativeEvent.key });
 						if (e.nativeEvent.key === 'Backspace') {
@@ -90,25 +93,24 @@ class OTPAutoVerification extends Component {
 		return <View style={[styles.textInputContainer, this.props.textInputContainer]}>{textInput}</View>;
 	}
 
+	funcs(index,value){
+		if(value.length===6){
+			this.setState({ code: [...value] });
+			this.otpTextInput[1].blur();
+		}
+	
+	}
+
 	handleEdgeCase(currentIndex) {
-    const currentIndexValue =
-    this.state.code[currentIndex] === '' ||
-    this.state.code[currentIndex] === undefined;
-  if (
-    currentIndex &&
-    currentIndexValue &&
-    this.state.keyPress === 'Backspace'
-  ) {
-    this.otpTextInput[currentIndex - 1].focus();
-  }
-  if (this.state.keyPress === 'Backspace' && currentIndex !== 0) {
-    if (
-      currentIndex !== 0 ||
-      (currentIndex <= this.otpTextInput.length - 1 && !!currentIndexValue)
-    ) {
-      this.otpTextInput[currentIndex - 1].focus();
-    }
-  }
+		const currentIndexValue = this.state.code[currentIndex] === '' || this.state.code[currentIndex] === undefined;
+		if (currentIndex && currentIndexValue && this.state.keyPress === 'Backspace') {
+			this.otpTextInput[currentIndex - 1].focus();
+		}
+		if (this.state.keyPress === 'Backspace' && currentIndex !== 0) {
+			if (currentIndex !== 0 || (currentIndex <= this.otpTextInput.length - 1 && !!currentIndexValue)) {
+				this.otpTextInput[currentIndex - 1].focus();
+			}
+		}
 	}
 
 	focusNext(index, value) {
